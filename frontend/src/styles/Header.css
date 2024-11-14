@@ -1,0 +1,23 @@
+.header {
+    position: relative;
+    background-image: url('D:\Bureau\Projet_CDA\matchzone\frontend\public\images\foot.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 60vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.navbar-custom{
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.header-content{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
