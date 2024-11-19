@@ -35,4 +35,12 @@ module.exports = (sequelize) => {
         tableName: 'match',
         timestamps: false
     });
+
+    Match.associate = (models) => {
+        Match.belongsTo(models.User, { foreignKey: 'id_user', as: 'creator' });
+        //Match.belongsTo(models.Tournament, { foreignKey: 'id_tournament', as: 'tournament' });
+        Match.hasMany(models.Participation, { foreignKey: 'id_match', as: 'participants' });
+    };
+
+    return Match;
 }

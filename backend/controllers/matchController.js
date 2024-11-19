@@ -1,4 +1,5 @@
 const {Match, User, Tournament} = require('../models');
+const Participation = require('../models/Participation');
 
 
 //Récupérer tous les matchs
@@ -56,6 +57,35 @@ exports.createMatch = async (req, res) => {
             createdAt: new Date(),
             updatedAt: new Date()
         });
+    } catch (error) {
+        console.error("Erreur lors de la création du match :", error);
+        res.status(500).json({error: "Erreur lors de la création du match."});
+    }
+};
+
+//Participer à un match
+exports.participateInMatch = async (req, res) => {
+    try {
+        const { id_user, id_match } = req.body;
+
+        const user = await User.findByPk(id_user);
+        if(!user){
+            return res.status(400).json({error: "Utilisateur introuvable avec cet ID"});
+        }
+
+        const match = await Match.findByPk(id_user);
+        if(!user){
+            return res.status(400).json({error: "Utilisateur introuvable avec cet ID"});
+        }
+
+        
+        if(existingParticipation){
+            return res.status(400).json({error: "Vous participez déja à ce match"});
+        }
+
+        const participation = await Participation.create({id_user, id_match});
+
+        res.status(200).json({message: "Participation enregistrée avec succès", participation})
     } catch (error) {
         console.error("Erreur lors de la création du match :", error);
         res.status(500).json({error: "Erreur lors de la création du match."});

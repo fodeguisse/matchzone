@@ -36,4 +36,13 @@ module.exports = (sequelize) => {
         tableName: 'user',
         timestamps: false
     });
+
+    User.associate = (models) => {
+        User.hasMany(models.Match, { foreignKey : 'id_user', as: 'matches'});
+        User.hasMany(models.Tournament, { foreignKey : 'id_user', as: 'tournaments'});
+        User.hasMany(models.Match, { foreignKey : 'id_user', as: 'createMatches'});
+        User.hasMany(models.Participation, { foreignKey : 'id_user', as: 'participations'});
+    };
+
+    return User;
 };
