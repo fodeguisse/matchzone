@@ -1,0 +1,27 @@
+.home-page {
+    padding: 2rem;
+}
+
+.next-event-section, upcoming-events {
+    margin-bottom: 3rem;
+}
+
+.next-event-section h2, upcoming-events h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.event-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+.countdown {
+    font-size: 1.5rem;
+    color: #007bff;
+    text-align: center;
+    margin-top: 1rem;
+}

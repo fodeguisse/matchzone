@@ -1,23 +1,38 @@
 .header {
     position: relative;
-    background-image: url('D:\Bureau\Projet_CDA\matchzone\frontend\public\images\foot.jpg');
+    background-image: url('D:\Bureau\Projet_CDA\matchzone\frontend\public\images\welcome.webp');
     background-size: cover;
     background-position: center;
-    height: 60vh;
+    height: 50vh;
     color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    padding: 0 2rem;
 }
 
 .navbar-custom{
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.85);
+    padding: 1rem;
 }
 
-.header-content{
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+
+.logo {
+    height: 40px;
+    margin-right: 10px;
+}
+  
+
+.header-content h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+.header-content p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
 }
 

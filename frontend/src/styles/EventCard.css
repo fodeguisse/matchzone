@@ -1,0 +1,31 @@
+
+.event-card {
+    margin: 1rem;
+    border: none;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+  
+
+.event-card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.event-card .card-title {
+    color: #007bbf;
+    font-weight: bold;
+}
+
+.card-actions {
+    margin-top: 1rem;
+  }
+  
+  .card-actions .btn {
+    width: 100%;
+  }
