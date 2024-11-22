@@ -1,77 +1,61 @@
-const { where } = require('sequelize');
-const {User, Match} = require('../models');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const { validationResult } = require('express-validator');
 
-//Récupérer tous les utilisateurs
-exports.getAllUsers = async (req, res) => {
-    try {
-        const users = await User.findAll();
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({error : "Erreur lors de la récupération des utilisateurs"}
-        )
-    }
+const registerUser = async (req, res) => {
+  const { firstname, lastname, email, password, phone } = req.body;
+
+  // Validation des champs
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    const user = await User.create({
+      firstname,
+      lastname,
+      email,
+      password: hashedPassword,
+      phone,
+      role: 'user', // Par défaut, rôle utilisateur
+    });
+    res.status(201).json({ message: 'Utilisateur créé avec succès' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de l\'inscription', error: err });
+  }
 };
 
-//Créer un utilisateur
-exports.createUser = async (req, res) => {
-    try {
-        const user = await User.create(req.body);
-        res.json(user);
-    } catch (error) {
-        res.status(500).json({error : "Erreur lors de la création de l'utilisateur"}
-        )
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Tous les champs sont obligatoires' });
+  }
+
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(401).json({ message: 'Utilisateur non trouvé' });
     }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Mot de passe incorrect' });
+    }
+
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ message: 'Connexion réussie', token });
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur de connexion', error: err });
+  }
 };
 
-//Récupérer les matchs crées par l'utilisateur
-exports.getUserMatches = async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const matches = await Match.findAll({
-            where: {id_user: userId},
-        });
-        res.status(200).json(matches);
-    } catch (error) {
-        console.error("Erreur lors de la récupération des matchs de l'utilisateur :", error);
-        res.status(500).json({error : "Erreur lors de la récupération des matchs"});
-    }
+const logoutUser = (req, res) => {
+  res.json({ message: 'Déconnexion réussie' });
 };
 
-//Récupérer les matchs auquels l'utilisateur partipe
-exports.getUserParticipations = async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const matches = await Match.findAll({
-            where: {id_user: userId},
-        });
-        res.status(200).json(matches);
-    } catch (error) {
-        console.error("Erreur lors de la récupération des matchs de l'utilisateur :", error);
-        res.status(500).json({error : "Erreur lors de la récupération des matchs"});
-    }
-};
-
-
-//Créer un match
-exports.createUserMatch = async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const {name, adress, eventDate, image} = req.body;
-
-        const match = await Match.create({
-            name,
-            adress,
-            eventDate,
-            image,
-            id_user: userId,
-            id_tournament,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        });
-
-        res.status(201).json({message: "Match rée avec succès", match});
-    } catch (error) {
-        console.error("Erreur lors de la création du match :", error);
-        res.status(500).json({error: "Erreur lors de la création du match."});
-    }
-};
+module.exports = { registerUser, loginUser, logoutUser };

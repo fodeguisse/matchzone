@@ -1,13 +1,10 @@
 const express = require('express');
+const { createMatch, participateMatch } = require('../controllers/matchController');
+const { authMiddleware } = require('../middleware/authMiddleware');
+
 const router = express.Router();
-const matchController = require('../controllers/matchController')
 
-router.get('/matches', matchController.getAllMatches);
-router.get('/matches/:id', matchController.getAllMatchById);
-router.post('/matches', matchController.createMatch);
-
-router.post('/matches', matchController.participateInMatch);
-
-
+router.post('/', authMiddleware, createMatch); // Créer un match (seulement pour l'utilisateur connecté)
+router.post('/:id_match/participate', authMiddleware, participateMatch); // Participer à un match
 
 module.exports = router;

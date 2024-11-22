@@ -1,35 +1,24 @@
 const express = require('express');
-const {sequelize} = require('./models/index');
-const authRoutes = require('./routes/authRoutes');
+const cors = require('cors');
+require('dotenv').config();
+const sequelize = require('./config/sequelize');
 const userRoutes = require('./routes/userRoutes');
-const matchRoutes = require('./routes/matchRoutes');
 const tournamentRoutes = require('./routes/tournamentRoutes');
+const matchRoutes = require('./routes/matchRoutes');
+
 const app = express();
-
-app.use(express.json());
-
-//Synchroniser les modèles avec la base de données
-sequelize.sync()
-    .then(()=> console.log("Base de données synchronisée"))
-    .catch(()=> console.error("Erreur de synchronisation : ", error));
-
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/matches', matchRoutes);
-app.use('/api/tournaments', tournamentRoutes);
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Serveur en écoute sur le port ${PORT}`));
 
-// // démarrer le serveur et se connecter à la base
-// const starServer = async() => {
-//     try {
-//         await sequelize.authenticate();
-//         console.log('Connexion à la base de données reussie !')
-//     } catch (error) {
-//         console.error('Impossible de se connecter à la base de données : ', error);
-//     }
-// }
+app.use(cors());
+app.use(express.json());
+app.use('/api/users', userRoutes);
+app.use('/api/tournaments', tournamentRoutes);
+app.use('/api/matches', matchRoutes);
 
-// starServer();
-
+sequelize.sync({ alter: true }) // Crée les tables si elles n'existent pas ou les modifie si elles ont changé
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => console.error('Erreur lors de la synchronisation avec la base de données :', err));

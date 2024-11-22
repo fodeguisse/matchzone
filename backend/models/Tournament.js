@@ -1,45 +1,18 @@
-const {DataTypes} = require('sequelize');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize');
+const User = require('./User');
 
-module.exports = (sequelize) => {
-    return sequelize.define('Tournament', {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true        
-        },
-        name: {
-            type:DataTypes.STRING,
-            allowNull: false
-        },
-        adress: {
-            type:DataTypes.STRING,
-            allowNull: false
-        },
-        createdAt: {
-            type:DataTypes.DATE,
-            allowNull: false
-        },
-        updatedAt: {
-            type:DataTypes.DATE,
-            allowNull: false
-        },
-        eventDate: {
-            type:DataTypes.DATE,
-            allowNull: false
-        },
-        image: {
-            type:DataTypes.STRING,
-            allowNull: false
-        }
-    }, {
-        tableName: 'tournament',
-        timestamps: false
-    });
+const Tournament = sequelize.define('Tournament', {
+  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  name: { type: DataTypes.STRING(150), allowNull: false },
+  description: { type: DataTypes.TEXT, allowNull: false },
+  adress: { type: DataTypes.STRING(255), allowNull: false },
+  eventDate: { type: DataTypes.DATE, allowNull: false },
+  image: { type: DataTypes.STRING(255) },
+  createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+  updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+});
 
-    Tournament.associate = (models) => {
-        Tournament.belongsTo(models.User, { foreignKey: 'id_user', as: 'creator' });
-        Tournament.hasMany(models.Match, { foreignKey: 'id_tournament', as: 'matches' });
-    };
+Tournament.belongsTo(User, { foreignKey: 'id_user', as: 'user' });
 
-    return Tournament;
-}
+module.exports = Tournament;

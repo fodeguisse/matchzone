@@ -1,46 +1,45 @@
-const {User, Tournament} = require('../models');
+const Tournament = require('../models/Tournament');
+const { validationResult } = require('express-validator');
 
+const createTournament = async (req, res) => {
+  const { name, description, adress, eventDate, image } = req.body;
 
-//Récupérer tous les tournois
-exports.getAllTournaments = async (req, res) => {
-    try {
-        const tournaments = await Tournament.findAll({
-            include: [
-                {model : User, attributes: ['firstName', 'lastName']}
-            ]
-        });
-        res.json(tournaments);
-    } catch (error) {
-        res.status(500).json({error : "Erreur lors de la récupération des tournois"});
-    }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const tournament = await Tournament.create({
+      name,
+      description,
+      adress,
+      eventDate,
+      image,
+      id_user: req.user.id, // L'utilisateur connecté crée le tournoi
+    });
+    res.status(201).json({ message: 'Tournoi créé avec succès', tournament });
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de la création du tournoi', error: err });
+  }
 };
 
+const participateTournament = async (req, res) => {
+  const { id_tournament } = req.params;
 
-// récupérer un match par ID
-exports.getAllTournamentById = async (req, res) => {
-    try {
-        const tournament = await Tournament.findByPk(req.params.id, {
-            include: [
-                {model : User, attributes: ['firstName', 'lastName']},
-            ]
-        });
-        if(tournament){
-            res.json(tournament);
-        } else {
-            res.status(404).json({error: "Match non trouvé"});
-        }
-        
-    } catch (error) {
-        res.status(500).json({error : "Erreur lors de la récupération du tournois"});
+  try {
+    const tournament = await Tournament.findByPk(id_tournament);
+    if (!tournament) {
+      return res.status(404).json({ message: 'Tournoi introuvable' });
     }
+
+    // Vérifier si l'utilisateur est déjà inscrit au tournoi (simplification ici)
+    // Ajoutez un lien avec une table de participation si nécessaire
+
+    res.status(200).json({ message: 'Vous participez au tournoi' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de la participation au tournoi', error: err });
+  }
 };
 
-// créer un nouveau tournoi
-exports.createTournament = async (req, res) => {
-    try {
-        const tournament = await Tournament.create(req, res);
-        res.status(201).json(tournament);
-    } catch (error) {
-        res.status(500).json({error : "Erreur lors de la création du tournoi"});
-    }
-}
+module.exports = { createTournament, participateTournament };
