@@ -1,34 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-function Countdown({eventDate}) {
-    const calculateTimeRemaining = () => {
-        const eventTime = new Date(eventDate).getTime();
-        const now = new Date().getTime();
-        const difference = eventTime - now;
+function Countdown({ eventDate }) {
+  const calculateTimeRemaining = () => {
+    const eventTime = new Date(eventDate).getTime();
+    const now = new Date().getTime();
+    const difference = eventTime - now;
 
-        return {
-            days: Math.floor(difference / (1000*60*60*24)),
-            hours: Math.floor(difference % (1000*60*60*24) / (1000*60*60)),
-            minutes: Math.floor(difference % (1000*60*60*24) / (1000*60)),
-            seconds: Math.floor(difference % (1000*60*60*24) / 1000),
-        }
-    }
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / (1000 * 60)) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  };
 
-    const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
+  const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTimeRemaining(calculateTimeRemaining());
-        }, 1000);
-        return () => clearInterval(interval);
-    }, [eventDate]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeRemaining(calculateTimeRemaining());
+    }, 1000);
 
-    return(
-        <div className="countdown">
-            <span>{timeRemaining.days}j</span> : <span>{timeRemaining.hours}h</span>: <span>{timeRemaining.minutes}m</span> : <span>{timeRemaining.seconds}s</span>
+    return () => clearInterval(interval);
+  }, [eventDate]);
 
-        </div>
-    );
+  return (
+    <div className="countdown">
+      <span>{timeRemaining.days}j</span> :{' '}
+      <span>{timeRemaining.hours}h</span> :{' '}
+      <span>{timeRemaining.minutes}m</span> :{' '}
+      <span>{timeRemaining.seconds}s</span>
+    </div>
+  );
 }
 
 export default Countdown;

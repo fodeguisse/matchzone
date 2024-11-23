@@ -44,4 +44,30 @@ const participateMatch = async (req, res) => {
   }
 };
 
-module.exports = { createMatch, participateMatch };
+// Récupérer tous les matchs
+const getAllMatches = async (req, res) => {
+  try {
+    const matches = await Match.findAll(); // Récupérer tous les matchs
+    res.status(200).json(matches); // Retourner les matchs trouvés
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des matchs', error: err });
+  }
+};
+
+// Récupérer un match par son ID
+const getMatchById = async (req, res) => {
+  const { id_match } = req.params;
+
+  try {
+    const match = await Match.findByPk(id_match); // Récupérer un match par son ID
+    if (!match) {
+      return res.status(404).json({ message: 'Match introuvable' });
+    }
+    res.status(200).json(match); // Retourner le match trouvé
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de la récupération du match', error: err });
+  }
+};
+
+
+module.exports = { createMatch, participateMatch, getAllMatches, getMatchById };

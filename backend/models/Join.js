@@ -14,6 +14,9 @@ const Join = sequelize.define('Join', {
     primaryKey: true,
     allowNull: false 
   }
+}, {
+  tableName: 'join',
+  timestamps: false,
 });
 
 // Relation entre Join et User

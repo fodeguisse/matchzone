@@ -15,10 +15,14 @@ app.use('/api/users', userRoutes);
 app.use('/api/tournaments', tournamentRoutes);
 app.use('/api/matches', matchRoutes);
 
-sequelize.sync({ alter: true }) // Crée les tables si elles n'existent pas ou les modifie si elles ont changé
+// Test la connexion à la base de données sans synchronisation des tables
+sequelize.authenticate()
   .then(() => {
+    console.log('Connexion à la base de données réussie.');
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });
   })
-  .catch((err) => console.error('Erreur lors de la synchronisation avec la base de données :', err));
+  .catch((err) => {
+    console.error('Erreur de connexion à la base de données :', err);
+  });

@@ -7,6 +7,9 @@ const Tournament = require('./Tournament');
 const Comment = sequelize.define('Comment', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   content: { type: DataTypes.TEXT, allowNull: false },
+}, {
+  tableName: 'comment',
+  timestamps: false,
 });
 
 Comment.belongsTo(User, { foreignKey: 'id_user', as: 'user' });

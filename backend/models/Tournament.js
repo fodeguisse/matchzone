@@ -11,6 +11,9 @@ const Tournament = sequelize.define('Tournament', {
   image: { type: DataTypes.STRING(255) },
   createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
   updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+}, {
+  tableName: 'tournament',
+  timestamps: false,
 });
 
 Tournament.belongsTo(User, { foreignKey: 'id_user', as: 'user' });

@@ -1,0 +1,50 @@
+.home-page {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .next-event-section, .upcoming-events-section {
+    margin-bottom: 40px;
+  }
+  
+  .next-event-highlight {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .event-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .card.event-card {
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .card.event-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .card-body {
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .card-actions {
+    margin-top: 15px;
+  }
+  
+  .countdown {
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+  }
+  

@@ -1,0 +1,115 @@
+/* Style général du tableau de bord */
+.dashboard {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.dashboard-section {
+  margin-bottom: 40px;
+}
+
+/* Style pour les listes d'événements (matchs créés et participations) */
+.event-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.event-form input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.event-form .btn {
+  align-self: flex-start;
+}
+
+/* Responsive styles */
+
+/* Tablettes et petits écrans (max-width: 768px) */
+@media screen and (max-width: 768px) {
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+
+  .event-list {
+    gap: 10px;
+    justify-content: flex-start;
+  }
+
+  .event-form {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .event-form input {
+    padding: 8px;
+  }
+
+  /* Ajuster les boutons du formulaire */
+  .event-form .btn {
+    align-self: center;
+  }
+}
+
+/* Mobiles (max-width: 480px) */
+@media screen and (max-width: 480px) {
+  .dashboard-title {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+
+  .event-list {
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .event-form {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .event-form input {
+    padding: 6px;
+    font-size: 0.9rem;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Réduire la taille des boutons sur mobile */
+  .event-form .btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}

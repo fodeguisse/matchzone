@@ -7,7 +7,9 @@ form {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-form input, form textarea, form select {
+form input,
+form textarea,
+form select {
     width: 100%;
     padding: 0.75rem;
     margin-bottom: 1rem;
@@ -18,18 +20,14 @@ form input, form textarea, form select {
     transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-form input:focus, form textarea:focus, form select:focus {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 1rem;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+form input:focus,
+form textarea:focus,
+form select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-form button{
+form button {
     display: block;
     width: 100%;
     padding: 0.75rem;
@@ -42,4 +40,8 @@ form button{
     box-sizing: border-box;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
+}
+
+form button:hover {
+    background-color: #0056b3;
 }

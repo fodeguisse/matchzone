@@ -1,13 +1,18 @@
 const express = require('express');
 const { registerUser, loginUser, logoutUser } = require('../controllers/userController');
-const { body } = require('express-validator'); // Pour la validation des champs
+const { validateUserRegistration } = require('../middleware/validationMiddleware');
+const { validationResult } = require('express-validator');
 
 const router = express.Router();
 
-router.post('/register', [
-  body('email').isEmail().withMessage('Email invalide'),
-  body('password').isLength({ min: 8 }).withMessage('Le mot de passe doit comporter au moins 8 caractères')
-], registerUser);
+router.post('/register', validateUserRegistration, (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+}, registerUser);
+
 router.post('/login', loginUser);
 router.post('/logout', logoutUser);
 

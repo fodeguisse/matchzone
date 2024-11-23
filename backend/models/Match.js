@@ -13,6 +13,9 @@ const Match = sequelize.define('Match', {
   image: { type: DataTypes.STRING(255) },
   createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
   updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+}, {
+  tableName: 'match',
+  timestamps: false,
 });
 
 Match.belongsTo(User, { foreignKey: 'id_user', as: 'user' });

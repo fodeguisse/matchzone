@@ -14,6 +14,9 @@ const Have = sequelize.define('Have', {
     primaryKey: true,
     allowNull: false 
   }
+}, {
+  tableName: 'have',
+  timestamps: false,
 });
 
 // Relation entre Have et Team

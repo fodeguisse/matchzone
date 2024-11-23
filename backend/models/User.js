@@ -9,6 +9,9 @@ const User = sequelize.define('User', {
   password: { type: DataTypes.STRING(255), allowNull: false },
   phone: { type: DataTypes.STRING(150), allowNull: false },
   role: { type: DataTypes.STRING(50), allowNull: false },
+}, {
+  tableName: 'user',
+  timestamps: false,
 });
 
 module.exports = User;

@@ -1,38 +1,87 @@
+/* Header Background */
 .header {
-    position: relative;
-    background-image: url('D:\Bureau\Projet_CDA\matchzone\frontend\public\images\welcome.webp');
-    background-size: cover;
-    background-position: center;
-    height: 50vh;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    padding: 0 2rem;
+  background: url('../assets/images/welcome.webp') no-repeat center center/cover;
+  color: white;
+  text-align: center;
+  padding: 50px 20px;
 }
-
-.navbar-custom{
-    background: rgba(0, 0, 0, 0.85);
-    padding: 1rem;
-}
-
-
-.logo {
-    height: 40px;
-    margin-right: 10px;
-}
-  
 
 .header-content h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 10px 0;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .header-content p {
-    font-size: 1.2rem;
-    margin-top: 10px;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+  font-size: 1.2rem;
+  margin: 0;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
+/* Navbar Customization */
+.navbar-custom {
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 10px 15px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-custom .nav-link {
+  color: white;
+  margin-left: 10px;
+  transition: color 0.3s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link:focus {
+  color: #ffc107;
+}
+
+.navbar-custom .navbar-brand {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbar-custom .navbar-toggler {
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navbar-custom .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .header {
+    padding: 30px 10px;
+  }
+
+  .header-content h1 {
+    font-size: 2rem;
+  }
+
+  .header-content p {
+    font-size: 1rem;
+  }
+
+  .navbar-custom .nav-link {
+    font-size: 0.9rem;
+    margin-left: 5px;
+  }
+}
+
+@media (max-width: 576px) {
+  .header-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .header-content p {
+    font-size: 0.9rem;
+  }
+
+  .navbar-custom {
+    padding: 8px 10px;
+  }
+}

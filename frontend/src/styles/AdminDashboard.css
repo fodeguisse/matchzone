@@ -1,0 +1,80 @@
+/* Style de base pour le tableau et la page */
+.admin-dashboard {
+    padding: 20px;
+    background-color: #f4f4f4;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  table th, table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    white-space: nowrap; /* Empêche les lignes de se couper */
+  }
+  
+  table th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  /* Styles pour les messages d'erreur */
+  .error {
+    color: red;
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  
+  /* Media query pour rendre le tableau responsive */
+  @media screen and (max-width: 768px) {
+    .admin-dashboard {
+      padding: 10px;
+    }
+  
+    table {
+      font-size: 0.9rem;
+      width: 100%;
+      overflow-x: auto;
+      display: block; /* Le tableau devient un bloc défilant */
+      white-space: nowrap;
+    }
+  
+    table th, table td {
+      padding: 8px;
+    }
+  
+    /* Ajouter une barre de défilement horizontale pour les écrans étroits */
+    table {
+      overflow-x: auto;
+    }
+  
+    /* Masquer certaines colonnes pour les petits écrans */
+    table th:nth-child(4), table td:nth-child(4) {
+      display: none; /* Masque la colonne "Rôle" sur petits écrans */
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    h2 {
+      font-size: 1.5rem;
+    }
+  
+    table th, table td {
+      padding: 6px;
+      font-size: 0.8rem;
+    }
+  
+    .error {
+      font-size: 1rem;
+    }
+  }
+  
