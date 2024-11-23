@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext'; // Importer le contexte
 import '../styles/Form.css';
 
 const Login = () => {
@@ -8,15 +9,19 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useUser(); // Accède à la fonction setUser du contexte
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/users/login', { email, password });
       localStorage.setItem('token', response.data.token);
+
       if (response.data.user) {
-        localStorage.setItem('user', JSON.stringify(response.data.user)); // Vérifiez que `response.data.user` est défini
+        localStorage.setItem('user', JSON.stringify(response.data.user)); // Stocker l'utilisateur dans le localStorage
+        setUser(response.data.user); // Mettre à jour l'état user dans le contexte
       }
+
       const userRole = response.data.user.role;
       if (userRole === 'admin') {
         navigate('/admin-dashboard');
@@ -28,7 +33,6 @@ const Login = () => {
       setError(backendError);
     }
   };
-  
 
   return (
     <div className="login">

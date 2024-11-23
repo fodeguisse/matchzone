@@ -1,48 +1,59 @@
-/* Header Background */
-.header {
-  background: url('../assets/images/welcome.webp') no-repeat center center/cover;
-  color: white;
-  text-align: center;
-  padding: 50px 20px;
+/* Logo size */
+.navbar-logo img {
+  max-width: 150px; /* Limite la largeur du logo */
+  height: auto; /* Conserve les proportions du logo */
 }
 
-.header-content h1 {
-  font-size: 3rem;
-  font-weight: bold;
-  margin: 10px 0;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+/* Responsive adjustments for logo */
+@media (max-width: 768px) {
+  .navbar-logo img {
+    max-width: 120px; /* Réduit la taille du logo sur les écrans plus petits */
+  }
 }
 
-.header-content p {
-  font-size: 1.2rem;
-  margin: 0;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+@media (max-width: 576px) {
+  .navbar-logo img {
+    max-width: 100px; /* Encore plus petit sur les très petits écrans */
+  }
 }
-
 /* Navbar Customization */
 .navbar-custom {
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 10px 15px;
+  background-color: rgba(0, 0, 0, 0.8); /* Un fond noir transparent pour une touche moderne */
+  padding: 10px 20px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+/* Menu links */
 .navbar-custom .nav-link {
   color: white;
-  margin-left: 10px;
-  transition: color 0.3s ease;
+  font-size: 1rem; /* Taille de police confortable */
+  font-weight: 500; /* Légèrement gras pour un look moderne */
+  margin-left: 15px;
+  transition: color 0.3s ease, transform 0.3s ease; /* Animation fluide pour hover */
 }
 
+/* Hover effect */
 .navbar-custom .nav-link:hover,
 .navbar-custom .nav-link:focus {
-  color: #ffc107;
+  color: #ffc107; /* Jaune pour la couleur de survol */
+  transform: scale(1.1); /* Un léger effet d'agrandissement */
 }
 
+/* Active link color */
+.navbar-custom .nav-link.active {
+  color: #ffc107; /* Jaune lorsque l'élément est actif */
+}
+
+/* Logo */
 .navbar-custom .navbar-brand {
   color: white;
   font-size: 1.5rem;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
+/* Mobile Navbar customizations */
 .navbar-custom .navbar-toggler {
   border: none;
   background-color: rgba(255, 255, 255, 0.2);
@@ -52,36 +63,33 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-/* Responsive Adjustments */
+/* Making the Navbar Responsive */
 @media (max-width: 768px) {
-  .header {
-    padding: 30px 10px;
+  .navbar-custom {
+    padding: 8px 15px;
   }
 
-  .header-content h1 {
-    font-size: 2rem;
+  .navbar-custom .navbar-brand {
+    font-size: 1.3rem;
   }
 
-  .header-content p {
-    font-size: 1rem;
+  .navbar-custom .navbar-nav {
+    text-align: center; /* Centrer les liens dans la version mobile */
   }
 
   .navbar-custom .nav-link {
-    font-size: 0.9rem;
-    margin-left: 5px;
+    font-size: 1.1rem;
+    margin-left: 0;
+    margin-bottom: 10px; /* Espace entre les éléments */
   }
 }
 
 @media (max-width: 576px) {
-  .header-content h1 {
-    font-size: 1.8rem;
+  .navbar-custom .nav-link {
+    font-size: 1rem;
   }
 
-  .header-content p {
-    font-size: 0.9rem;
-  }
-
-  .navbar-custom {
-    padding: 8px 10px;
+  .navbar-custom .navbar-brand {
+    font-size: 1.2rem;
   }
 }

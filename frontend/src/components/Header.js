@@ -1,14 +1,18 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container } from 'react-bootstrap';
+import { useUser } from '../context/UserContext'; 
 import '../styles/Header.css';
-import logo from '../assets/images/Matchzone.png'; // Corrigez le chemin vers votre logo
+import logo from '../assets/images/Matchzone.png';
 
-const Header = ({ user, handleLogout }) => {
+const Header = () => {
+  const { user, setUser } = useUser(); // Utilisation du hook useUser
   const navigate = useNavigate();
 
   const logout = () => {
-    handleLogout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null); // Réinitialiser l'utilisateur dans le contexte
     navigate('/');
   };
 
@@ -17,8 +21,7 @@ const Header = ({ user, handleLogout }) => {
       <Navbar className="navbar-custom" expand="lg">
         <Container>
           <Navbar.Brand as={Link} to="/" className="navbar-logo">
-          <img src="../assets/images/Matchzone.png" alt="Logo MatchZone" className="logo-img"/>
-            MatchZone
+            <img src={logo} alt="Logo" /> MatchZone
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar-nav" />
           <Navbar.Collapse id="navbar-nav">
@@ -43,12 +46,6 @@ const Header = ({ user, handleLogout }) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <div className="header-content">
-        <Container>
-          <h1>Bienvenue sur MatchZone</h1>
-          <p>Découvrez et participez aux événements sportifs près de chez vous</p>
-        </Container>
-      </div>
     </header>
   );
 };
