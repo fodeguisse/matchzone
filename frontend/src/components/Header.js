@@ -6,13 +6,13 @@ import '../styles/Header.css';
 import logo from '../assets/images/Matchzone.png';
 
 const Header = () => {
-  const { user, setUser } = useUser(); // Utilisation du hook useUser
+  const { user, setUser } = useUser();
   const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    setUser(null); // Réinitialiser l'utilisateur dans le contexte
+    setUser(null);
     navigate('/');
   };
 
@@ -21,17 +21,18 @@ const Header = () => {
       <Navbar className="navbar-custom" expand="lg">
         <Container>
           <Navbar.Brand as={Link} to="/" className="navbar-logo">
-            <img src={logo} alt="Logo" /> MatchZone
+            <img src={logo} alt="Logo" className="logo" /> <span>MatchZone</span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar-nav" />
           <Navbar.Collapse id="navbar-nav">
             <Nav className="ml-auto">
               <Nav.Link as={Link} to="/" className="nav-link">Accueil</Nav.Link>
-              <Nav.Link as={Link} to="/matches" className="nav-link">Matches</Nav.Link>
+              <Nav.Link as={Link} to="/matches" className="nav-link">Matchs</Nav.Link>
               <Nav.Link as={Link} to="/tournaments" className="nav-link">Tournois</Nav.Link>
               {user ? (
                 <>
-                  <Nav.Link className="nav-link disabled">
+                  {/* Redirection vers UserDashboard */}
+                  <Nav.Link as={Link} to="/user-dashboard" className="nav-link">
                     Bonjour, {user.firstName}
                   </Nav.Link>
                   <Nav.Link onClick={logout} className="nav-link">Déconnexion</Nav.Link>

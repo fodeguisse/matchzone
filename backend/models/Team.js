@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
-const User = require('./User');
 
 const Team = sequelize.define('Team', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
@@ -8,9 +7,6 @@ const Team = sequelize.define('Team', {
   numberOfPlayers: { type: DataTypes.INTEGER, allowNull: false },
 }, {
   tableName: 'team',
-  timestamps: false,
 });
-
-Team.belongsTo(User, { foreignKey: 'id_user', as: 'user' });
 
 module.exports = Team;

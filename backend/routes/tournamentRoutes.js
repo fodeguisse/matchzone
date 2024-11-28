@@ -1,10 +1,23 @@
 const express = require('express');
-const { createTournament, participateTournament } = require('../controllers/tournamentController');
-const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
+const {
+  createTournament,
+  participateTournament,
+  getAllTournaments,
+  getTournamentById,
+} = require('../controllers/tournamentController');
+const { authMiddleware } = require('../middleware/authMiddleware');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
 
 const router = express.Router();
 
-router.post('/', authMiddleware, adminMiddleware, createTournament); // Seul un admin peut créer un tournoi
-router.post('/:id_tournament/participate', authMiddleware, participateTournament); // Participer à un tournoi
+router.post('/create', authMiddleware, upload.single('image'),createTournament);
+
+router.post('/participate', authMiddleware, participateTournament);
+
+router.get('/', getAllTournaments);
+
+router.get('/:id', getTournamentById);
 
 module.exports = router;

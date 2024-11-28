@@ -1,0 +1,26 @@
+.tournaments {
+    padding: 20px;
+  }
+  
+  .tournaments h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .tournaments ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .tournaments li {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .error {
+    color: red;
+    font-size: 16px;
+  }
+  

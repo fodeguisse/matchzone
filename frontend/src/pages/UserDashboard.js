@@ -1,101 +1,90 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import EventCard from "../components/EventCard";
+import EventForm from "../components/EventForm";
 import "../styles/UserDashboard.css";
 
 const UserDashboard = () => {
   const [createdMatches, setCreatedMatches] = useState([]);
-  const [participations, setParticipations] = useState([]);
+  const [joinedMatches, setJoinedMatches] = useState([]);
+  const [createdTournaments, setCreatedTournaments] = useState([]);
+  const [joinedTournaments, setJoinedTournaments] = useState([]);
   const [showMatchForm, setShowMatchForm] = useState(false);
   const [showTournamentForm, setShowTournamentForm] = useState(false);
 
-  const [newMatch, setNewMatch] = useState({
-    name: "",
-    adress: "",
-    eventDate: "",
-    image: "",
-  });
-
-  const [newTournament, setNewTournament] = useState({
-    name: "",
-    adress: "",
-    eventDate: "",
-    image: "",
-    maxTeams: "",
-  });
+  const token = localStorage.getItem("token");
+  const userId = token ? JSON.parse(atob(token.split(".")[1])).id : null;
 
   useEffect(() => {
-    fetchCreatedMatches();
-    fetchParticipations();
-  }, []);
+    if (userId) {
+      fetchCreatedMatches();
+      fetchJoinedMatches();
+      fetchCreatedTournaments();
+      fetchJoinedTournaments();
+    }
+  }, [userId]);
 
+  const axiosConfig = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  // Appels API pour les matchs créés par l'utilisateur
   const fetchCreatedMatches = async () => {
     try {
-      const response = await axios.get("/api/user/my-matches", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axios.get(`/api/matches/user/${userId}/created`, axiosConfig);
+      console.log("Données reçues :", response.data);
       setCreatedMatches(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des matchs créés :", error);
     }
   };
 
-  const fetchParticipations = async () => {
+  // Appels API pour les matchs auxquels l'utilisateur participe
+  const fetchJoinedMatches = async () => {
     try {
-      const response = await axios.get("/api/user/my-participations", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      setParticipations(response.data);
+      const response = await axios.get(`/api/matches/user/${userId}/joined`, axiosConfig);
+      console.log("Données reçues :", response.data);
+      setJoinedMatches(response.data);
     } catch (error) {
-      console.error("Erreur lors de la récupération des participations :", error);
+      console.error("Erreur lors de la récupération des matchs rejoints :", error);
     }
   };
 
-  const handleInputChange = (e, setState) => {
-    setState((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
-  };
-
-  const createMatch = async (e) => {
-    e.preventDefault();
+  // Appels API pour les tournois créés par l'utilisateur
+  const fetchCreatedTournaments = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const decodedToken = JSON.parse(atob(token.split(".")[1])); // Décodage du token JWT
-      const userId = decodedToken.id;
-
-      await axios.post(
-        "/api/matches",
-        { ...newMatch, id_user: userId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      alert("Match créé avec succès !");
-      setShowMatchForm(false);
-      fetchCreatedMatches();
+      const response = await axios.get(`/api/tournaments/user/${userId}/created`, axiosConfig);
+      console.log("Données reçues :", response.data);
+      setCreatedTournaments(response.data);
     } catch (error) {
-      console.error("Erreur lors de la création du match :", error);
-      alert("Erreur lors de la création du match");
+      console.error("Erreur lors de la récupération des tournois créés :", error);
     }
   };
 
-  const createTournament = async (e) => {
-    e.preventDefault();
+  // Appels API pour les tournois auxquels l'utilisateur participe
+  const fetchJoinedTournaments = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const decodedToken = JSON.parse(atob(token.split(".")[1])); // Décodage du token JWT
-      const userId = decodedToken.id;
-
-      await axios.post(
-        "/api/tournaments",
-        { ...newTournament, id_user: userId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      alert("Tournoi créé avec succès !");
-      setShowTournamentForm(false);
-      fetchCreatedMatches();
+      const response = await axios.get(`/api/tournaments/user/${userId}/joined`, axiosConfig);
+      console.log("Données reçues :", response.data);
+      setJoinedTournaments(response.data);
     } catch (error) {
-      console.error("Erreur lors de la création du tournoi :", error);
-      alert("Erreur lors de la création du tournoi");
+      console.error("Erreur lors de la récupération des tournois rejoints :", error);
+    }
+  };
+
+  // Gestion de la création d'événements
+  const createEvent = async (url, data) => {
+    try {
+      const formData = new FormData();
+      Object.keys(data).forEach((key) => formData.append(key, data[key]));
+
+      await axios.post(url, formData, axiosConfig);
+      alert("Événement créé avec succès !");
+      fetchCreatedMatches();
+      fetchCreatedTournaments();
+    } catch (error) {
+      console.error("Erreur lors de la création de l'événement :", error);
+      alert("Erreur lors de la création de l'événement");
     }
   };
 
@@ -103,28 +92,47 @@ const UserDashboard = () => {
     <div className="dashboard">
       <h1 className="dashboard-title">Espace Personnel</h1>
 
+      {/* Matchs créés par l'utilisateur connecté */}
       <section className="dashboard-section">
         <h2>Matchs créés</h2>
         <div className="event-list">
           {createdMatches.map((match) => (
-            <EventCard key={match.id} event={match} onParticipate={() => {}} />
+            <EventCard key={match.id} event={match} />
           ))}
         </div>
       </section>
 
+      {/* Matchs auxquels l'utilisateur participe */}
       <section className="dashboard-section">
         <h2>Matchs auxquels je participe</h2>
         <div className="event-list">
-          {participations.map((participation) => (
-            <EventCard
-              key={participation.id}
-              event={participation.Match}
-              onParticipate={() => {}}
-            />
+          {joinedMatches.map((match) => (
+            <EventCard key={match.id} event={match} />
           ))}
         </div>
       </section>
 
+      {/* Tournois créés par l'utilisateur connecté */}
+      <section className="dashboard-section">
+        <h2>Tournois créés</h2>
+        <div className="event-list">
+          {createdTournaments.map((tournament) => (
+            <EventCard key={tournament.id} event={tournament} />
+          ))}
+        </div>
+      </section>
+
+      {/* Tournois auxquels l'utilisateur participe */}
+      <section className="dashboard-section">
+        <h2>Tournois auxquels je participe</h2>
+        <div className="event-list">
+          {joinedTournaments.map((tournament) => (
+            <EventCard key={tournament.id} event={tournament} />
+          ))}
+        </div>
+      </section>
+
+      {/* Formulaires de création */}
       <section className="dashboard-section">
         <h2>Créer un événement</h2>
         <div className="form-buttons">
@@ -143,98 +151,37 @@ const UserDashboard = () => {
         </div>
 
         {showMatchForm && (
-          <form onSubmit={createMatch} className="event-form">
-            <input
-              type="text"
-              name="name"
-              value={newMatch.name}
-              onChange={(e) => handleInputChange(e, setNewMatch)}
-              placeholder="Nom du match"
-              required
-            />
-            <input
-              type="text"
-              name="adress"
-              value={newMatch.adress}
-              onChange={(e) => handleInputChange(e, setNewMatch)}
-              placeholder="Adresse"
-              required
-            />
-            <input
-              type="datetime-local"
-              name="eventDate"
-              value={newMatch.eventDate}
-              onChange={(e) => handleInputChange(e, setNewMatch)}
-              required
-            />
-            <input
-              type="file"
-              name="image"
-              onChange={(e) =>
-                setNewMatch((prevState) => ({
-                  ...prevState,
-                  image: e.target.files[0],
-                }))
-              }
-              accept="image/*"
-              required
-            />
-            <button type="submit" className="btn btn-success">
-              Créer
-            </button>
-          </form>
+          <EventForm
+            title="Créer un Match"
+            fields={[
+              { name: "name", label: "Nom du match", type: "text" },
+              { name: "description", label: "Description", type: "textarea" }, // Champ ajouté
+              { name: "adress", label: "Adresse", type: "text" },
+              { name: "eventDate", label: "Date", type: "datetime-local" },
+              { name: "maxNumberPlayers", label: "Nombre maximum de joueurs", type: "number" },
+              { name: "image", label: "Image", type: "file" },
+            ]}
+            onSubmit={(data) => createEvent("/api/matches/create", data)}
+            onClose={() => setShowMatchForm(false)}
+          />
         )}
 
         {showTournamentForm && (
-          <form onSubmit={createTournament} className="event-form">
-            <input
-              type="text"
-              name="name"
-              value={newTournament.name}
-              onChange={(e) => handleInputChange(e, setNewTournament)}
-              placeholder="Nom du tournoi"
-              required
-            />
-            <input
-              type="text"
-              name="adress"
-              value={newTournament.adress}
-              onChange={(e) => handleInputChange(e, setNewTournament)}
-              placeholder="Adresse"
-              required
-            />
-            <input
-              type="datetime-local"
-              name="eventDate"
-              value={newTournament.eventDate}
-              onChange={(e) => handleInputChange(e, setNewTournament)}
-              required
-            />
-            <input
-              type="number"
-              name="maxTeams"
-              value={newTournament.maxTeams}
-              onChange={(e) => handleInputChange(e, setNewTournament)}
-              placeholder="Nombre maximum d'équipes"
-              required
-            />
-            <input
-              type="file"
-              name="image"
-              onChange={(e) =>
-                setNewTournament((prevState) => ({
-                  ...prevState,
-                  image: e.target.files[0],
-                }))
-              }
-              accept="image/*"
-              required
-            />
-            <button type="submit" className="btn btn-success">
-              Créer
-            </button>
-          </form>
+          <EventForm
+            title="Créer un Tournoi"
+            fields={[
+              { name: "name", label: "Nom du tournoi", type: "text" },
+              { name: "description", label: "Description", type: "textarea" }, // Champ ajouté
+              { name: "adress", label: "Adresse", type: "text" },
+              { name: "eventDate", label: "Date", type: "datetime-local" },
+              { name: "maxNumberTeams", label: "Nombre maximum d'équipes", type: "number" },
+              { name: "image", label: "Image", type: "file" },
+            ]}
+            onSubmit={(data) => createEvent("/api/tournaments/create", data)}
+            onClose={() => setShowTournamentForm(false)}
+          />
         )}
+
       </section>
     </div>
   );

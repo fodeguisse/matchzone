@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '../context/UserContext'; // Importer le contexte
+import { useUser } from '../context/UserContext';
 import '../styles/Form.css';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { setUser } = useUser();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const { setUser } = useUser(); // Accède à la fonction setUser du contexte
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,16 +20,13 @@ const Login = () => {
       localStorage.setItem('token', response.data.token);
 
       if (response.data.user) {
-        localStorage.setItem('user', JSON.stringify(response.data.user)); // Stocker l'utilisateur dans le localStorage
-        setUser(response.data.user); // Mettre à jour l'état user dans le contexte
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        setUser(response.data.user);
       }
 
-      const userRole = response.data.user.role;
-      if (userRole === 'admin') {
-        navigate('/admin-dashboard');
-      } else {
-        navigate('/user-dashboard');
-      }
+      // Gérer la redirection après connexion
+      const redirectTo = new URLSearchParams(location.search).get('redirectTo') || '/user-dashboard';
+      navigate(redirectTo);
     } catch (err) {
       const backendError = err.response?.data?.message || 'Erreur lors de la connexion.';
       setError(backendError);

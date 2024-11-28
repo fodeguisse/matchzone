@@ -1,95 +1,92 @@
-/* Logo size */
-.navbar-logo img {
-  max-width: 150px; /* Limite la largeur du logo */
-  height: auto; /* Conserve les proportions du logo */
-}
-
-/* Responsive adjustments for logo */
-@media (max-width: 768px) {
-  .navbar-logo img {
-    max-width: 120px; /* Réduit la taille du logo sur les écrans plus petits */
-  }
-}
-
-@media (max-width: 576px) {
-  .navbar-logo img {
-    max-width: 100px; /* Encore plus petit sur les très petits écrans */
-  }
-}
-/* Navbar Customization */
-.navbar-custom {
-  background-color: rgba(0, 0, 0, 0.8); /* Un fond noir transparent pour une touche moderne */
-  padding: 10px 20px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-/* Menu links */
-.navbar-custom .nav-link {
+/* Global Header */
+.header {
+  background-color: #000; /* Couleur de fond noir pour modernité */
   color: white;
-  font-size: 1rem; /* Taille de police confortable */
-  font-weight: 500; /* Légèrement gras pour un look moderne */
-  margin-left: 15px;
-  transition: color 0.3s ease, transform 0.3s ease; /* Animation fluide pour hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre subtile */
 }
 
-/* Hover effect */
-.navbar-custom .nav-link:hover,
-.navbar-custom .nav-link:focus {
-  color: #ffc107; /* Jaune pour la couleur de survol */
-  transform: scale(1.1); /* Un léger effet d'agrandissement */
-}
-
-/* Active link color */
-.navbar-custom .nav-link.active {
-  color: #ffc107; /* Jaune lorsque l'élément est actif */
-}
-
-/* Logo */
-.navbar-custom .navbar-brand {
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
+/* Logo styling */
+.navbar-logo {
   display: flex;
   align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
 }
 
-/* Mobile Navbar customizations */
-.navbar-custom .navbar-toggler {
+.navbar-logo .logo {
+  max-width: 50px; /* Taille adaptée du logo */
+  margin-right: 10px;
+  border-radius: 8px; /* Coins légèrement arrondis */
+}
+
+/* Navbar Customization */
+.navbar-custom {
+  background-color: rgba(0, 0, 0, 0.9); /* Couleur semi-transparente */
+  padding: 10px 15px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-custom .nav-link {
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link:focus {
+  background-color: #ffc107; /* Fond jaune */
+  color: black;
+  transform: scale(1.05); /* Effet de survol */
+}
+
+/* Active link styling */
+.navbar-custom .nav-link.active {
+  background-color: #ffc107;
+  color: black;
+}
+
+/* Mobile menu adjustments */
+.navbar-toggler {
   border: none;
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-.navbar-custom .navbar-toggler-icon {
+.navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-/* Making the Navbar Responsive */
-@media (max-width: 768px) {
+/* Responsive Styling */
+@media (max-width: 992px) {
   .navbar-custom {
-    padding: 8px 15px;
+    padding: 8px 10px;
   }
 
-  .navbar-custom .navbar-brand {
-    font-size: 1.3rem;
+  .navbar-nav {
+    text-align: center;
   }
 
-  .navbar-custom .navbar-nav {
-    text-align: center; /* Centrer les liens dans la version mobile */
-  }
-
-  .navbar-custom .nav-link {
-    font-size: 1.1rem;
-    margin-left: 0;
-    margin-bottom: 10px; /* Espace entre les éléments */
+  .navbar-nav .nav-link {
+    margin: 5px 0; /* Espacement vertical entre les liens */
+    font-size: 1.2rem;
   }
 }
 
 @media (max-width: 576px) {
-  .navbar-custom .nav-link {
-    font-size: 1rem;
+  .navbar-logo {
+    font-size: 1.2rem;
   }
 
-  .navbar-custom .navbar-brand {
-    font-size: 1.2rem;
+  .navbar-logo .logo {
+    max-width: 40px; /* Réduction supplémentaire du logo */
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 1rem;
+    padding: 6px 10px;
   }
 }

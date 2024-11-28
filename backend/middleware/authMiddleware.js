@@ -4,6 +4,7 @@ const User = require('../models/User'); // Modèle User pour trouver l'utilisate
 // Middleware pour vérifier l'authentification
 const authMiddleware = async (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
+  console.log('Token reçu:', token);
 
   if (!token) {
     return res.status(401).json({ message: 'Accès refusé, veuillez vous connecter.' });
@@ -11,15 +12,19 @@ const authMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // Vérification du token
-    const user = await User.findByPk(decoded.id); // Récupération de l'utilisateur par ID
+    console.log('Token décodé:', decoded);
 
+    const user = await User.findByPk(decoded.id); // Récupération de l'utilisateur par ID
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé." });
     }
 
     req.user = { id: user.id, role: user.role }; // Attacher l'utilisateur à la requête
+    console.log('Utilisateur attaché à la requête:', req.user);
+
     next();
   } catch (err) {
+    console.error('Erreur dans le middleware authMiddleware:', err);
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({ message: 'Token expiré, veuillez vous reconnecter.' });
     }
