@@ -57,8 +57,11 @@ const loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: 'Mot de passe incorrect.' });
     }
+    
+    const token = jwt.sign({ id: user.id_user, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log('Réponse du serveur : ', { token, user });
+
     res.status(200).json({ message: 'Connexion réussie.', token, user });
   } catch (err) {
     console.error('Erreur lors de la connexion:', err);
@@ -66,9 +69,55 @@ const loginUser = async (req, res) => {
   }
 };
 
+
+
 // Déconnexion d'un utilisateur
 const logoutUser = (req, res) => {
   res.status(200).json({ message: 'Déconnexion réussie.' });
 };
 
-module.exports = { registerUser, loginUser, logoutUser };
+// Modifier un utilisateur
+const updateUser = async (req, res) => {
+  const { firstName, lastName, email, phone } = req.body;
+
+  try {
+    const user = await User.findByPk(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur introuvable' });
+    }
+
+    const updatedData = { firstName, lastName, email, phone };
+    await user.update(updatedData);
+
+    res.status(200).json({ message: 'Utilisateur mis à jour avec succès', user });
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
+    res.status(500).json({ message: 'Erreur serveur lors de la mise à jour de l\'utilisateur', error: error.message });
+  }
+};
+
+// Supprimer un utilisateur
+const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur introuvable' });
+    }
+
+    await user.destroy();
+    res.status(200).json({ message: 'Utilisateur supprimé avec succès' });
+  } catch (error) {
+    console.error('Erreur lors de la suppression de l\'utilisateur:', error);
+    res.status(500).json({ message: 'Erreur serveur lors de la suppression de l\'utilisateur', error: error.message });
+  }
+};
+
+module.exports = { 
+  registerUser, 
+  loginUser, 
+  logoutUser,
+  updateUser,
+  deleteUser 
+};

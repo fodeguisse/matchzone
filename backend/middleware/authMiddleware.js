@@ -1,43 +1,40 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // Modèle User pour trouver l'utilisateur par ID
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
-// Middleware pour vérifier l'authentification
+// Middleware pour vérifier l'authentification de l'utilisateur
 const authMiddleware = async (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  console.log('Token reçu:', token);
-
-  if (!token) {
-    return res.status(401).json({ message: 'Accès refusé, veuillez vous connecter.' });
+  const token = req.header("Authorization");
+  if (!token || !token.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Token manquant ou mal formé." });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Vérification du token
-    console.log('Token décodé:', decoded);
+    const decoded = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.id);
 
-    const user = await User.findByPk(decoded.id); // Récupération de l'utilisateur par ID
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé." });
     }
 
-    req.user = { id: user.id, role: user.role }; // Attacher l'utilisateur à la requête
-    console.log('Utilisateur attaché à la requête:', req.user);
-
+    req.user = { id: user.id_user, role: user.role };
+    console.log("Utilisateur authentifié :", req.user);
+    
     next();
   } catch (err) {
-    console.error('Erreur dans le middleware authMiddleware:', err);
-    if (err.name === 'TokenExpiredError') {
-      return res.status(401).json({ message: 'Token expiré, veuillez vous reconnecter.' });
-    }
-    res.status(400).json({ message: 'Token invalide.' });
+    const errorMessage =
+      err.name === "TokenExpiredError"
+        ? "Token expiré. Veuillez vous reconnecter."
+        : "Token invalide.";
+    return res.status(401).json({ message: errorMessage });
   }
 };
 
-// Middleware pour vérifier le rôle administrateur
-const adminMiddleware = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Accès refusé, rôle insuffisant.' });
+// Middleware pour vérifier les autorisations basées sur les rôles
+const roleMiddleware = (roles) => (req, res, next) => {
+  if (!roles.includes(req.user.role)) {
+    return res.status(403).json({ message: "Accès refusé. Rôle insuffisant." });
   }
   next();
 };
 
-module.exports = { authMiddleware, adminMiddleware };
+module.exports = { authMiddleware, roleMiddleware };
