@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { postData } from '../services/apiService'; // Importer la fonction postData
 import '../styles/Form.css';
 
 const Register = () => {
@@ -25,20 +25,20 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!validatePassword(formData.password)) {
-      setError('Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial.');
+      setError(
+        "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial."
+      );
       return;
     }
     try {
-      console.log('Données envoyées pour inscription :', formData);
-      await axios.post('http://localhost:5000/api/users/register', formData);
-      setSuccess('Inscription réussie ! Vous pouvez vous connecter.');
-      setError('');
-      setFormData({ firstName: '', lastName: '', email: '', password: '', phone: '' });
+      await postData("http://localhost:5000/api/users/register", formData);
+      setSuccess("Inscription réussie ! Vous pouvez vous connecter.");
+      setError("");
+      setFormData({ firstName: "", lastName: "", email: "", password: "", phone: "" });
     } catch (err) {
-      console.error('Erreur côté frontend:', err.response?.data); // Log plus précis
-      const backendError = err.response?.data?.errors || [{ msg: err.response?.data?.message || 'Erreur lors de l’inscription.' }];
-      setError(backendError.map(error => error.msg).join(', '));
-    }    
+      const backendError = err.message || "Erreur lors de l’inscription.";
+      setError(backendError);
+    }
   };
 
   return (

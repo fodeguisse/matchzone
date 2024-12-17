@@ -13,20 +13,23 @@ function Matches() {
     const fetchMatches = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/matches");
-        const matches = response.data.sort(
-          (a, b) => new Date(a.eventDate) - new Date(b.eventDate)
-        );
-
-        setNextMatch(matches[0]); // Prochain match
-        setUpcomingMatches(matches.slice(1, 5)); // Les 4 suivants
+        const now = new Date();
+  
+        const matches = response.data
+          .filter((match) => new Date(match.eventDate) > now)
+          .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+  
+        setNextMatch(matches[0] || null);
+        setUpcomingMatches(matches.slice(1, 5));
       } catch (err) {
         setError("Erreur lors du chargement des matchs.");
         console.error(err);
       }
     };
-
+  
     fetchMatches();
   }, []);
+  
 
   const handleParticipate = async (eventId) => {
     try {

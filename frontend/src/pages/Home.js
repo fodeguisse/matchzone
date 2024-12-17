@@ -12,37 +12,39 @@ function Home() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        // Fetch matches and tournaments in parallel
         const [matchesResponse, tournamentsResponse] = await Promise.all([
           axios.get("http://localhost:5000/api/matches"),
           axios.get("http://localhost:5000/api/tournaments"),
         ]);
-
+  
         const matches = matchesResponse.data.map((match) => ({
           ...match,
-          type: "match", // Indique que cet événement est un match
+          type: "match",
         }));
-
+  
         const tournaments = tournamentsResponse.data.map((tournament) => ({
           ...tournament,
-          type: "tournament", // Indique que cet événement est un tournoi
+          type: "tournament",
         }));
-
-        // Combine and sort all events by date
-        const allEvents = [...matches, ...tournaments].sort(
-          (a, b) => new Date(a.eventDate) - new Date(b.eventDate)
-        );
-
-        setNextEvent(allEvents[0]); // Premier événement le plus proche
-        setUpcomingEvents(allEvents.slice(1, 5)); // Les 4 suivants
+  
+      
+        const now = new Date();
+  
+        const allEvents = [...matches, ...tournaments]
+          .filter((event) => new Date(event.eventDate) > now)
+          .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+  
+        setNextEvent(allEvents[0] || null);
+        setUpcomingEvents(allEvents.slice(1, 5));
       } catch (err) {
         setError("Erreur lors du chargement des événements.");
         console.error(err);
       }
     };
-
+  
     fetchEvents();
   }, []);
+  
 
   const handleParticipate = async (eventId, eventType) => {
     try {
@@ -52,10 +54,9 @@ function Home() {
         return;
       }
 
-      // Détermine l'URL API en fonction du type d'événement
       const url =
         eventType === "match"
-          ? "http://localhost:5000/api/matches/participate"
+          ? "http://localhost:5000/api/matches/join"
           : "http://localhost:5000/api/tournaments/participate";
 
       await axios.post(

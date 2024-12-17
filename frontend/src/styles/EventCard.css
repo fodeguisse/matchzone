@@ -1,12 +1,14 @@
 .event-card {
     margin: 1rem;
-    border: none;
+    border: 2px solid transparent; /* Bordure animée */
+    border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
 .event-card:hover {
     transform: translateY(-5px);
+    border-color: #007bff; /* Couleur de surbrillance */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -15,30 +17,155 @@
     object-fit: cover;
 }
 
-.event-card .card-title {
-    color: #007bbf;
+.event-card.tournament {
+    background: linear-gradient(to right, #ffe3d8, #ffcdc2); /* Dégradé pour tournoi */
+}
+
+.event-card.match {
+    background: linear-gradient(to right, #cce7ff, #aad9ff); /* Dégradé pour match */
+}
+
+.card-title {
+    color: #333;
     font-weight: bold;
+}
+
+.event-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
+
+.event-badge {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    color: white;
+}
+
+.event-badge.tournament {
+    background-color: #ff6f61; /* Rouge pastel pour tournoi */
+}
+
+.event-badge.match {
+    background-color: #4faaff; /* Bleu pastel pour match */
 }
 
 .card-actions {
     margin-top: 1rem;
 }
 
-.card-actions .btn {
+.card-actions button {
+    display: block;
     width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.card-actions button:hover {
+    background-color: #0056b3;
 }
 
 .card-img-placeholder {
-    width: 100%; /* La largeur de la carte */
-    height: 200px; /* Même hauteur que l'image */
+    width: 100%; /* Largeur de la carte */
+    height: 200px; /* Hauteur fixe */
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f0f0f0; /* Couleur par défaut */
-    color: #999; /* Couleur du texte */
+    background-color: #f8f9fa; /* Couleur neutre */
     font-size: 1rem;
+    font-weight: bold;
+    color: #ccc;
+}
+
+form button,
+.card-actions button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+form button:hover,
+.card-actions button:hover {
+    background-color: #0056b3;
+}
+
+.card-img-placeholder {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 1.2rem;
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
-    border-radius: 4px; /* Optionnel, pour arrondir les coins */
-}
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  
+  .placeholder-content h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .placeholder-content p {
+    font-size: 1rem;
+    font-weight: lighter;
+    opacity: 0.8;
+    animation: fadeIn 1.2s ease-in-out;
+  }
+  
+  .card-img-placeholder::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+    animation: shine 3s infinite ease-in-out;
+    transform: rotate(45deg);
+  }
+  
+  @keyframes shine {
+    0% {
+      transform: scale(0.8) rotate(45deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.2) rotate(45deg);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  

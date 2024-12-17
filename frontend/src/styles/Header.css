@@ -1,92 +1,120 @@
-/* Global Header */
+/* Header Styling */
 .header {
-  background-color: #000; /* Couleur de fond noir pour modernité */
+  background-color: #1a1a2e; /* Background moderne */
   color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+  padding: 10px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-/* Logo styling */
-.navbar-logo {
+.header-container {
   display: flex;
   align-items: center;
-  font-size: 1.5rem;
+  justify-content: space-between;
+  flex-wrap: nowrap; /* Important pour forcer tout sur une ligne */
+}
+
+/* Logo Section */
+.header-logo .navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+}
+
+.header-logo .logo {
+  width: 40px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.brand-name {
+  font-size: 1.4rem;
   font-weight: bold;
   color: white;
-  text-decoration: none;
 }
 
-.navbar-logo .logo {
-  max-width: 50px; /* Taille adaptée du logo */
-  margin-right: 10px;
-  border-radius: 8px; /* Coins légèrement arrondis */
-}
-
-/* Navbar Customization */
-.navbar-custom {
-  background-color: rgba(0, 0, 0, 0.9); /* Couleur semi-transparente */
-  padding: 10px 15px;
-  transition: background-color 0.3s ease;
-}
-
-.navbar-custom .nav-link {
+/* Navigation Links */
+.nav-links .nav-link {
   color: white;
+  margin: 0 15px;
   font-size: 1rem;
-  font-weight: 500;
-  padding: 8px 12px;
+  transition: color 0.3s ease;
+}
+
+.nav-links .nav-link:hover {
+  color: #ffc107;
+}
+
+/* Search Form */
+.search-form .search-input {
   border-radius: 5px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  background-color: #333;
+  color: white;
+  border: none;
 }
 
-.navbar-custom .nav-link:hover,
-.navbar-custom .nav-link:focus {
-  background-color: #ffc107; /* Fond jaune */
-  color: black;
-  transform: scale(1.05); /* Effet de survol */
+.search-form .search-input:focus {
+  border-color: #ffc107;
+  box-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
 }
 
-/* Active link styling */
-.navbar-custom .nav-link.active {
+.search-form button {
   background-color: #ffc107;
   color: black;
-}
-
-/* Mobile menu adjustments */
-.navbar-toggler {
   border: none;
-  background-color: rgba(255, 255, 255, 0.2);
 }
 
-.navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+.search-form button:hover {
+  background-color: #e0a800;
 }
 
-/* Responsive Styling */
+/* User Auth Links */
+.user-auth-links .nav-link {
+  color: white;
+  margin: 0 10px;
+  font-size: 0.9rem;
+}
+
+
+.user-auth-links .nav-link:hover {
+  color: #ffc107;
+}
+
+
+/* Responsive Adjustments */
 @media (max-width: 992px) {
-  .navbar-custom {
-    padding: 8px 10px;
+  .header-container {
+    flex-wrap: wrap; /* Empiler les éléments sur petits écrans */
+    justify-content: center;
+    gap: 15px;
   }
 
-  .navbar-nav {
-    text-align: center;
+  .search-form {
+    width: 100%;
   }
 
-  .navbar-nav .nav-link {
-    margin: 5px 0; /* Espacement vertical entre les liens */
-    font-size: 1.2rem;
+  .nav-links, .user-auth-links {
+    justify-content: center;
+  }
+
+  .nav-links .nav-link, .user-auth-links .nav-link {
+    margin: 5px;
   }
 }
 
 @media (max-width: 576px) {
-  .navbar-logo {
+  .header-logo .logo {
+    width: 35px;
+  }
+
+  .brand-name {
     font-size: 1.2rem;
   }
 
-  .navbar-logo .logo {
-    max-width: 40px; /* Réduction supplémentaire du logo */
-  }
-
-  .navbar-nav .nav-link {
-    font-size: 1rem;
-    padding: 6px 10px;
+  .search-form {
+    margin-top: 10px;
   }
 }

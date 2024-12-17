@@ -1,50 +1,61 @@
+/* Page principale */
 .home-page {
-    padding: 20px;
-    background-color: #f9f9f9;
-  }
-  
-  .next-event-section, .upcoming-events-section {
-    margin-bottom: 40px;
-  }
-  
-  .next-event-highlight {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-  }
-  
-  .event-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-  }
-  
-  .card.event-card {
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .card.event-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .card-body {
-    padding: 15px;
-    text-align: center;
-  }
-  
-  .card-actions {
-    margin-top: 15px;
-  }
-  
-  .countdown {
-    font-size: 18px;
-    font-weight: bold;
-    color: #555;
-  }
-  
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Section du prochain événement */
+.next-event-section {
+  margin-bottom: 40px;
+  text-align: center; /* Centre le contenu */
+}
+
+.next-event-highlight {
+  display: flex;
+  flex-direction: column; /* Aligne les éléments verticalement */
+  align-items: center;    /* Centre les éléments horizontalement */
+  gap: 20px;              /* Espacement entre l'événement et le compte à rebours */
+}
+
+/* Section des événements suivants */
+.upcoming-events-section {
+  margin-bottom: 40px;
+}
+
+.event-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Carte d'événement */
+.card.event-card {
+  width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card.event-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 15px;
+  text-align: center;
+}
+
+.card-actions {
+  margin-top: 15px;
+}
+
+/* Compte à rebours */
+.countdown {
+  font-size: 20px;
+  font-weight: bold;
+  color: #555;
+  margin-top: 10px;
+}

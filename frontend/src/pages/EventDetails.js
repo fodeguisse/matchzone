@@ -1,98 +1,106 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../styles/EventDetails.css';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../styles/EventDetails.css";
 
 const EventDetails = () => {
-  const { id } = useParams(); // Récupère l'ID depuis l'URL
-  const [event, setEvent] = useState(null); // Événement à afficher
+  const { id } = useParams(); // Récupérer l'ID depuis l'URL
+  const [event, setEvent] = useState(null);
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
-  const token = localStorage.getItem('token');
+  const [newComment, setNewComment] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchEventDetails();
   }, [id]);
 
+  // Récupération des détails de l'événement (match ou tournoi)
   const fetchEventDetails = async () => {
     try {
-      const [matchesRes, tournamentsRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/matches"),
-        axios.get("http://localhost:5000/api/tournaments"),
-      ]);
+      setIsLoading(true);
+      let eventData = null;
 
-      const match = matchesRes.data.find((match) => match.id === Number(id));
-      const tournament = tournamentsRes.data.find((tournament) => tournament.id === Number(id));
+      // Tentative de récupération pour un match
+      try {
+        const matchResponse = await axios.get(
+          `http://localhost:5000/api/matches/${id}`
+        );
+        eventData = { ...matchResponse.data, type: "match" };
+      } catch (matchError) {
+        // Si ce n'est pas un match, tenter pour un tournoi
+        const tournamentResponse = await axios.get(
+          `http://localhost:5000/api/tournaments/${id}`
+        );
+        eventData = { ...tournamentResponse.data, type: "tournament" };
+      }
 
-      const event = match || tournament;
-      if (event) {
-        setEvent(event);
-        setComments(event.comments || []);
+      if (eventData) {
+        setEvent(eventData);
+        setComments(eventData.comments || []);
       } else {
-        console.error("Événement introuvable avec l'ID :", id);
+        setError("Événement introuvable.");
       }
     } catch (error) {
-      console.error("Erreur lors de la récupération des détails de l'événement :", error);
+      console.error("Erreur lors de la récupération des détails :", error);
+      setError("Impossible de charger les détails de l'événement.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Participation à un événement
   const handleParticipate = async () => {
-    if (!token) {
-      // Redirige vers la page connexion avec retour automatique à EventDetails
-      navigate(`/login?redirectTo=/event/${id}`);
-      return;
-    }
-
-    const remainingPlaces =
-      (event.maxNumberPlayers || event.maxNumberTeams) -
-      (event.currentParticipants || 0);
-
-    if (remainingPlaces <= 0) {
-      alert("Le nombre maximum de participants est atteint.");
-      return;
-    }
-
     try {
+      if (!token) {
+        navigate(`/login?redirectTo=/events/${id}`);
+        return;
+      }
+
+      const endpoint =
+        event.type === "match"
+          ? `/api/matches/join`
+          : `/api/tournaments/${id}/participate`;
+
       await axios.post(
-        `/api/events/${id}/participate`, // Remplacez avec le bon endpoint
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        `http://localhost:5000${endpoint}`,
+        { eventId: event.id },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert("Vous êtes inscrit avec succès !");
-      fetchEventDetails(); // Met à jour l'état
+
+      alert("Participation réussie !");
+      fetchEventDetails(); // Actualiser les détails après la participation
     } catch (error) {
-      console.error("Erreur lors de l'inscription :", error);
-      alert("Erreur lors de l'inscription");
+      console.error("Erreur lors de la participation :", error);
+      alert("Impossible de participer à l'événement.");
     }
   };
 
+  // Gestion des commentaires
   const handleCommentSubmit = async () => {
     if (!token) {
-      // Redirige vers la page connexion avec retour automatique à EventDetails
-      navigate(`/login?redirectTo=/event/${id}`);
+      navigate(`/login?redirectTo=/events/${id}`);
       return;
     }
 
     try {
       await axios.post(
-        `/api/events/${id}/comments`, // Remplacez avec le bon endpoint pour les commentaires
+        `/api/events/${id}/comments`,
         { content: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setNewComment('');
-      fetchEventDetails(); // Recharge les commentaires après ajout
+      setNewComment("");
+      fetchEventDetails(); // Rafraîchir les commentaires
     } catch (error) {
       console.error("Erreur lors de l'ajout du commentaire :", error);
     }
   };
 
+  // Affichage en cas de chargement ou d'erreur
   if (isLoading) return <p>Chargement...</p>;
+  if (error) return <p className="error">{error}</p>;
   if (!event) return <p>Événement introuvable.</p>;
 
   const remainingPlaces =
@@ -102,7 +110,11 @@ const EventDetails = () => {
   return (
     <div className="event-details">
       <div className="event-header">
-        <img src={event.image} alt={event.name} className="event-details-image" />
+        <img
+          src={event.image || "/default-event.jpg"}
+          alt={event.name}
+          className="event-details-image"
+        />
         <div className="event-info">
           <h1>{event.name}</h1>
           <p>{event.description}</p>
@@ -113,6 +125,10 @@ const EventDetails = () => {
             Lieu : <strong>{event.adress}</strong>
           </p>
           <p>
+            Organisé par :{" "}
+            <strong>{event.creator?.firstname || "Inconnu"}</strong>
+          </p>
+          <p>
             Places restantes : <strong>{remainingPlaces}</strong> /{" "}
             {event.maxNumberPlayers || event.maxNumberTeams}
           </p>
@@ -121,25 +137,31 @@ const EventDetails = () => {
             onClick={handleParticipate}
             disabled={remainingPlaces <= 0}
           >
-            {token ? "Participer" : "Connectez-vous ou inscrivez-vous pour participer"}
+            {token
+              ? event.type === "match"
+                ? "Rejoindre le match"
+                : "Participer au tournoi"
+              : "Connectez-vous pour participer"}
           </button>
         </div>
       </div>
 
+      {/* Section des commentaires */}
       <section className="comments-section">
         <h2>Commentaires</h2>
         {comments.length > 0 ? (
           comments.map((comment) => (
             <div key={comment.id} className="comment">
               <p>
-                <strong>{comment.user?.name || "Utilisateur"}</strong>:{" "}
+                <strong>{comment.user?.firstname || "Utilisateur"}</strong>:{" "}
                 {comment.content}
               </p>
             </div>
           ))
         ) : (
-          <p>Aucun commentaire pour le moment. Soyez le premier à commenter !</p>
+          <p>Aucun commentaire pour le moment.</p>
         )}
+
         {token && (
           <div className="comment-form">
             <textarea

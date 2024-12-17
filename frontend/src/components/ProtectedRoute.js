@@ -1,21 +1,21 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 const ProtectedRoute = ({ children, role }) => {
-  const user = JSON.parse(localStorage.getItem('user'));
   const token = localStorage.getItem('token');
-  
+  const user = JSON.parse(localStorage.getItem('user'));
+  const location = useLocation();
+
   if (!token || !user) {
-    // Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
-    return <Navigate to="/login" />;
+    // Redirige vers la page de connexion avec l'URL actuelle
+    return <Navigate to={`/login?redirectTo=${encodeURIComponent(location.pathname)}`} />;
   }
 
   if (role && user.role !== role) {
-    // Si l'utilisateur n'a pas le bon rôle, rediriger vers la page d'accueil (ou autre page appropriée)
+    // Redirige les utilisateurs sans rôle approprié
     return <Navigate to="/" />;
   }
 
-  // Si tout va bien, afficher l'enfant
   return children;
 };
 

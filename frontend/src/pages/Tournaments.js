@@ -13,20 +13,23 @@ function Tournaments() {
     const fetchTournaments = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/tournaments");
-        const tournaments = response.data.sort(
-          (a, b) => new Date(a.eventDate) - new Date(b.eventDate)
-        );
-
-        setNextTournament(tournaments[0]); // Prochain tournoi
-        setUpcomingTournaments(tournaments.slice(1, 5)); // Les 4 suivants
+        const now = new Date();
+  
+        const tournaments = response.data
+          .filter((tournament) => new Date(tournament.eventDate) > now)
+          .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+  
+        setNextTournament(tournaments[0] || null);
+        setUpcomingTournaments(tournaments.slice(1, 5));
       } catch (err) {
         setError("Erreur lors du chargement des tournois.");
         console.error(err);
       }
     };
-
+  
     fetchTournaments();
   }, []);
+  
 
   const handleParticipate = async (eventId) => {
     try {
